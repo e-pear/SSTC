@@ -3,6 +3,7 @@ Section Sag and Tension Calculator project related repositories.
 
 This repo contains main application source files along with side libraries related with Section Sag and Tension Calculator application:
 
+
 Related repositories:
 
 I. SSTC_BaseModel - Model related classes and interfaces.
@@ -17,13 +18,17 @@ V. SSTC_Solver_CommonInterfaces - Set of interfaces tiding together MathModel an
 
 VI. SSTC_ViewResources - A bunch of xaml views related resources like converters, regex based validators etc. nothing fancy :).
 
+
 Additional Folders:
 
-Lib - contains compiled libraries from aforementioned related repositories.
+Lib - contains compiled libraries from aforementioned related repositories. Every dll should be put in app main directory.
 
 Misc - contains csv files with conductor/wire and insulator/attachnent sets default databases.
 
-Database - contains binary databases which are used by SSTC application.
+Database - contains binary databases which are used by SSTC application. Should be put in app main directory.
+
+
+
 
 What is SSTC?
 
@@ -49,4 +54,8 @@ A setting tab, to change some in-app parameters.
 The "drawer" module which will allow to present the obtained results in a graphic form.
 The "printer" module which will allow the results to be printed to an xls/ods file.
 An additional methods of solving nonlinear equations systems.
-Credits: Piotr Gruszka SSTC Build: 082020 v0.85B
+
+Credits: 
+Piotr Gruszka SSTC 
+Build: 082020 v0.85B
+Icons: freeicons.io
