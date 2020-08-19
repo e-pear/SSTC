@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{467C7577-476D-4D19-908C-71615F4231D7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SSTC</RootNamespace>
+    <AssemblyName>SSTC</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SSTC_BaseModel">
+      <HintPath>..\..\SSTC_BaseModel\SSTC_BaseModel\bin\Debug\SSTC_BaseModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SSTC_Solver">
+      <HintPath>..\..\SSTC_Solver\SSTC_Solver\bin\Debug\SSTC_Solver.dll</HintPath>
+    </Reference>
+    <Reference Include="SSTC_ViewResources">
+      <HintPath>..\..\SSTC_ViewResources\SSTC_ViewResources\bin\Debug\SSTC_ViewResources.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\Annalist.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\StaticExtensions.cs" />
+    <Compile Include="Common\MainLanguageTable.cs" />
+    <Compile Include="Common\MainSettings.cs" />
+    <Compile Include="Common\StaticFileHandler.cs" />
+    <Compile Include="Modules\About\AboutTab.cs" />
+    <Compile Include="Modules\About\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Calculator\ModuleInternals\PresentedResultantSection.cs" />
+    <Compile Include="Modules\Calculator\ModuleInternals\PresentedResultantSpan.cs" />
+    <Compile Include="Modules\Calculator\ModuleInternals\UserSection.cs" />
+    <Compile Include="Modules\Calculator\ModuleInternals\UserSpan.cs" />
+    <Compile Include="Modules\DataManager\ConductorDataManager.cs" />
+    <Compile Include="Modules\DataManager\DialogBox\TextDialogBox.xaml.cs">
+      <DependentUpon>TextDialogBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\DataManager\DataManager.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Common\ITab.cs" />
+    <Compile Include="Common\Tab.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Modules\About\AboutView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Calculator\CalculatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\DataManager\DialogBox\TextDialogBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modules\DataManager\TabView\ConductorManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\DataManager\TabView\InsulatorSetManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="Modules\Calculator\CalculatorTab.cs" />
+    <Compile Include="Modules\Calculator\CalculatorView.xaml.cs">
+      <DependentUpon>CalculatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\DataManager\InsulatorSetDataManager.cs" />
+    <Compile Include="Modules\DataManager\TabViewModel\BaseDataManagerTab.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Modules\DataManager\TabViewModel\ConductorManagerTab.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Modules\DataManager\TabViewModel\InsulatorSetManagerTab.cs" />
+    <Compile Include="Modules\DataManager\TabView\ConductorManagerView.xaml.cs">
+      <DependentUpon>ConductorManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\DataManager\TabView\InsulatorSetManagerView.xaml.cs">
+      <DependentUpon>InsulatorSetManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="AnnalistCodes.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\DataManager\TabView\ModuleImages\strain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\DataManager\TabView\ModuleImages\standard_suspension.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\DataManager\TabView\ModuleImages\invertedv_suspension.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MessageCodes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MI_6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MI_1.png" />
+    <Resource Include="Images\MI_2.png" />
+    <Resource Include="Images\MI_3.png" />
+    <Resource Include="Images\MI_4.png" />
+    <Resource Include="Images\MI_5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MI_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_Add.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_AddAfter.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_AddBefore.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_RemoveLast.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_RemoveSelected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_ClearAll.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_ClearSpan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_OpenFromFile.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_Report.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_SaveToFile.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_SwitchOff.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_SwitchOn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_ReportIntegrity.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_ExtendedView.png" />
+    <Resource Include="Modules\Calculator\ModuleImages\CT_Search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TI_1.png" />
+    <Resource Include="Images\TI_2.png" />
+    <Resource Include="Images\TI_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Modules\Calculator\ModuleImages\CT_CloseReport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\About.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

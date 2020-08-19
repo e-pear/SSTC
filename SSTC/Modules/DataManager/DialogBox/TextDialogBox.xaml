@@ -1,0 +1,28 @@
+﻿<Window x:Class="SSTC.Modules.DataManager.DialogBox.TextDialogBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Dialog Box" Height="130" Width="240" WindowStartupLocation="CenterOwner"  ResizeMode="NoResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Name="labRequest" Grid.Column="1" Margin="11,0,0,0">Question:</Label>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+            <TextBox Name="tBxAnswer"  Width="204" TextChanged="textBox_Answer_TextChanged">Answer:</TextBox>
+            <Label Name="labNotice" Content="Given name already exists!" Margin="45,-5,0,0" FontStyle="Italic" Foreground="Red" Visibility="Hidden"/>
+        </StackPanel>
+        <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,5,15,0">
+            <Button IsDefault="True" Name="btnDialogOk" Click="btnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
+            <Button IsCancel="True" MinWidth="60">_Cancel</Button>
+        </WrapPanel>
+    </Grid>
+</Window>

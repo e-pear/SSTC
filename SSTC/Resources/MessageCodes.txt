@@ -1,0 +1,49 @@
+####|Comment Section.|||\n
+####|in message variables are handled by "@?" expression where "?" is 1,2,3,...,n number (no zero). Expressions must correspond to specified string variables arrays.|||\n
+####|E??? - Application errors:|||\n
+E000|Unknown error|An unknown error has occured|Unknown error occured|\n
+E011|Log file error|Unable to write logs on hard drive|Unable to write logs on hard drive|\n
+E021|Language file error|messages.csv file could not be opened|messages.csv language file missing or corrupted|\n
+E030|Data file path error|Data file missing. Please check your files or import new Database. Data file not found in: |Data file is missing - application started with empty database|expected path to database file|\n
+E031|Data serialization error|Failed to deserialize|Check system details|\n
+E032|Data serialization error|Failed to serialize|Check system details|\n
+E101|Database file error|The file could not be saved - operation aborted|The file could not be saved|\n
+E102|Database file error|The file could not be read - operation aborted|The file could not be read|\n
+E111|Database structural error|Unable to save new record. The code name already exists in the category|Unable to save new record - existing code name conflict|\n
+E122|Database management error|Export operation failed. An unknown error has occured|Database export operation failed due to unknown error|\n
+E127|Database management error|Import operation failed. An unknown error has occured|Database import operation failed due to unknown error|\n
+E128|Database management error|Database import operation aborted. Please use only allowed category names in imported data file. Allowed category names: @1| Database import operation failed due to category name conflict: one or more forbidden category name has been found in imported file - forbidden category list for this case: @1  |\n
+E129|Database management error|Database import operation aborted. Forbidden category name exploitation attempt detected. Please do not use: '@1' as category name in imported data file|Database import operation failed due to category name conflict: forbidden category name has been found in imported file - forbidden category list for this case: @1 |\n
+E200|Section Tab error|Section project loaded with error: Attached conductor not found or not recognized in local database|Section project loading operation partially failed, related conductor not recognized in local database|\n
+E201|Section project file error|The file could not be saved - operation aborted|The section project file could not be saved|\n
+E202|Section project file error|The file could not be read - operation aborted|The section project file could not be read|\n
+E251|Section model file error|The file could not be saved - operation aborted|The section model file could not be saved|\n
+E252|Section model file error|The file could not be read - operation aborted|The section model file could not be read|\n
+E300|Calculation module error|Calculations failed: '@1'. Please check your initial assumptions and conditions|Calculation module reported unsuccessful calculation operation - user initial condition error suspected|\n
+E301|Calculation module error|Calculations failed: Solver internal solver/math model error has occured. Please contact with the developer|Calculation module reported solver/math model internal error - attention needed|\n
+E999|Message code error|Unknown message code.|Unknown message code - source code error|\n
+####|I??? - Application messages:|||\n
+I030|Database initialization|@1 database file successfully initialized|@1 initialized with no errors|\n
+I111|Database management|Record has been saved successfully|Successful record adding operation|\n
+I112|Database management|Record has been modified successfully|Successful rocord modyfing operation|\n
+I113|Database management|New category has been added successfully|Successful category creating operation|\n
+I114|Database management|Category has been removed successfully|Successful category removing operation|\n
+I115|Database management|Category has been renamed successfully|Successful category renaming operation|\n
+I120|Database management|Database has been exported successfully. Total number of exported records: @1|Successful database exporting operation - total records exported: @1|\n
+I121|Database management|Category has been exported successfully. Total number of exported records: @1|Successful database partial exporting operation - total records exported: @1|\n
+I122|Database management|Export operation aborted by user|Export operation aborted by user|\n
+I125|Database management|Database import operation completed. There were @1 records in total, @2 records have been imported successfully. @3 record Code Names was altered.|Successful database importing operation - records imported: @2 from total recognized records: @1 - records' code names altered: @3 |\n
+I128|Database management|Database changes approved and saved by User|Database made changes saved by user request|\n
+I129|Database management|Database changes discarded by User|Database made changes discarded by user request|\n
+I200|Section Tab|Section project: '@1' has been successfully loaded from file.|Section project: '@1' successfully loaded from file|\n
+I201|Main window|Section project has been saved successfully|Successfull section project saving operation|\n
+I202|Main window|Section project has been loaded successfully|Successfull section project loading operation|\n
+I251|Section Tab|Section model has been saved successfully|Successfull section model saving operation|\n
+I252|Section Tab|Section model has been loaded successfully|Successfull section model loading operation|\n
+I300|Calculation module|Calculations completed successfully|Calculation module reported successful calculation operation|\n
+####|Q??? - Application enquiries with YesNo set of answer actions:|||\n
+Q111|Database management|Removing selected category will also remove all related records. Continue?|dummy|\n
+####|T??? - Application enquiries with YesNoCancel set of answer actions:|||\n
+T111|Database management|Save all changes?|dummy|\n
+####|W??? - Application warnings with OkCancel set of answer actions:|||\n
+####|Be sure that beyond this point there is absolutely nothing :)|||

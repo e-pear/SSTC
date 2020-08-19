@@ -1,0 +1,705 @@
+﻿<UserControl x:Class="SSTC.Modules.Calculator.CalculatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SSTC.Modules.Calculator"
+             xmlns:solver="clr-namespace:SSTC_Solver;assembly=SSTC_Solver"
+             mc:Ignorable="d" 
+             d:DesignHeight="580" d:DesignWidth="1160">
+    <UserControl.Resources>
+        <!--BUTTON STYLES-->
+        <Style x:Key="ButtonStyle_CalculateButton" TargetType="Button">
+            <Setter Property="Content" Value="Calculate"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=HasResults}" Value="True">
+                    <Setter Property="Content" Value="Recalculate"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ButtonStyle_SectionBuilderButton" TargetType="Button">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="30"/>
+        </Style>
+        <!--TEXTBOX STYLES-->
+        <Style x:Key="TextBoxStyle_Base" TargetType="TextBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="TextBoxStyle_StressTension" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle_Base}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsTensionAndStressInputAllowed}" Value="False">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="TextBoxStyle_Hidden_ConductorSearch" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle_Base}">
+            <Setter Property="Text" Value="{Binding Path=SearchedPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Setter Property="IsEnabled" Value="False"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ConductorSearchMode}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Setter Property="IsEnabled" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--LISTBOX STYLES-->
+        <Style x:Key="ListBoxStyle_ConductorSearchResults" TargetType="ListBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <!--COMBOS STYLES-->
+        <Style x:Key="ComboBoxStyle_Base" TargetType="ComboBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ComboBoxStyle_ConductorCategories" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxStyle_Base}">
+            <Setter Property="ItemsSource" Value="{Binding Path=CategoryOverview, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="SelectedValue" Value="{Binding Path=SelectedCategory, Mode=TwoWay}"/>
+            <Setter Property="IsSynchronizedWithCurrentItem" Value="False"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ConductorSearchMode}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ComboBoxStyle_ConductorItems" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxStyle_Base}">
+            <Setter Property="ItemsSource" Value="{Binding Path=ConductorOverview, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="DisplayMemberPath" Value="CodeName"/>
+            <Setter Property="SelectedValue" Value="{Binding Path=SelectedConductor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="IsSynchronizedWithCurrentItem" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ConductorAdvencedDisplayMode}" Value="True">
+                    <Setter Property="DisplayMemberPath" Value="DetailedName"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsSearchResultsListExpanded}" Value="True">
+                    <Setter Property="IsDropDownOpen" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--LABEL STYLES-->
+        <Style x:Key="LabelStyle_ConductorType" TargetType="Label">
+            <Setter Property="Content" Value="Type:"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ConductorSearchMode}" Value="True">
+                    <Setter Property="Content" Value="Search:"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="LabelStyle_ConductorCodeName" TargetType="Label">
+            <Setter Property="Content" Value="Code Name:"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ConductorSearchMode}" Value="True">
+                    <Setter Property="Content" Value="Results:"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--GROUPBOX STYLES-->
+        <Style x:Key="GroupBox_Results_VisibilityStyle" TargetType="GroupBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=UserSection.IsIntegrityReportShown}" Value="True">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding LockUI}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="GroupBox_Base_Style" TargetType="GroupBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding LockUI}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--GRID STYLES-->
+        <Style x:Key="Grid_VisibilityStyle" TargetType="Grid">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=UserSection.IsIntegrityReportShown}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--DATAGRID CELL STYLES-->
+        <Style x:Key="DataGridCellStyle_Base" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="DataGridCellStyle_NumericForTowerAbscissa" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsFirstSpan}" Value="False"/>
+                        <Condition Binding="{Binding Path=DataContext.UserSection.AlternativeInputMode, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Setter Property="Background" Value="LightGray"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DataGridCellStyle_BaseNumericForSpan" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsLastSpan}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DataGridCellStyle_NumericForSpan" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsLastSpan}" Value="True">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsLastSpan}" Value="False"/>
+                        <Condition Binding="{Binding Path=DataContext.UserSection.AlternativeInputMode, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter Property="IsEnabled" Value="True"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DatagridCellStyle_NumericForOpeningAngle" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsFirstSpan}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsLastSpan}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DatagridCellStyle_PresentedBase" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=DataContext.PresentedResultantSection.PresentedSolutionsVisible, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DatagridCellStyle_PresentedExtended" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle_Base}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=DataContext.PresentedResultantSection.SpanPresentedResultsGroupVisible, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="MainGrid" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="28*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="28*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <!--Conductor Box-->
+        <GroupBox Header="Conductor: " Grid.Row="1" Grid.Column="5" Style="{StaticResource GroupBox_Base_Style}">
+            <Grid x:Name="ConductorGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="150*"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Label Style="{StaticResource LabelStyle_ConductorType}" Grid.Column="1"/>
+                <Label Style="{StaticResource LabelStyle_ConductorCodeName}" Grid.Row="2" Grid.Column="1"/>
+                <TextBox Style="{StaticResource TextBoxStyle_Hidden_ConductorSearch}" Height="30" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1"/>
+                <ComboBox Style="{StaticResource ComboBoxStyle_ConductorCategories}" Height="30" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" ToolTip="Conductor category selection."/>
+                <ComboBox Style="{StaticResource ComboBoxStyle_ConductorItems}" IsSynchronizedWithCurrentItem="False" Height="30" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" ToolTip="Conductor type selection."/>
+                <ToggleButton ToolTip="Search Conductor" IsChecked="{Binding Path=ConductorSearchMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="2">
+                    <ToggleButton.Style>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Width" Value="30"/>
+                    </Style>
+                    </ToggleButton.Style>
+                    <ToggleButton.Content>
+                        <Image Source="ModuleImages/CT_Search.png"/>
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Button Command="{Binding Path=ToggleConductorDetailsCommand}" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="2" ToolTip="Conductor detailed discription toggle." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                    <Image Source="ModuleImages/CT_ExtendedView.png"/>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <!--Conditions Box-->
+        <Grid Grid.Row="3" Grid.Column="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Initial Tensile Force: " Style="{StaticResource GroupBox_Base_Style}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="70*"/>
+                        <ColumnDefinition Width="35"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="H&#x2080; :" Grid.Column="1"/>
+                    <Label Content="N" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Label Content="s :" FontFamily="Symbol" Grid.Row="2" Grid.Column="1"/>
+                    <Label Content="MPa" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <TextBox Style="{StaticResource TextBoxStyle_StressTension}" Text="{Binding Path=Tension0, Mode=TwoWay}" ToolTip="Initial value of the conductor tensile base force" Grid.Row="1" Grid.Column="1" Height="30"/>
+                    <TextBox Style="{StaticResource TextBoxStyle_StressTension}" Text="{Binding Path=Stress1, Mode=TwoWay, StringFormat=F2}" ToolTip="Initial value of the conductor tensile base stress" Grid.Row="3" Grid.Column="1" Height="30"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Temperature Conditions: " Grid.Column="2" Style="{StaticResource GroupBox_Base_Style}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="T&#x2081; :" Grid.Column="1"/>
+                    <Label Content="&#x2103;" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <Label Content="T&#x2082; :" Grid.Row="2" Grid.Column="1"/>
+                    <Label Content="&#x2103;" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Left"/>
+                    <TextBox Style="{StaticResource TextBoxStyle_Base}" Text="{Binding Path=Temperature1, Mode=TwoWay}" ToolTip="Initial value of the conductor temperature" Grid.Row="1" Grid.Column="1" Height="30"/>
+                    <TextBox Style="{StaticResource TextBoxStyle_Base}" Text="{Binding Path=Temperature2, Mode=TwoWay}" ToolTip="Target value of the conductor temperature" Grid.Row="3" Grid.Column="1" Height="30"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <!--Solver Box-->
+        <ContentControl Grid.Row="5" Grid.Column="5" Content="{Binding Path=Solver}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type solver:SolverViewModel}">
+                    <solver:SolverControl/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+        <!--Section Builder-->
+        <GroupBox Header="Section Builder: " Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="3" Style="{StaticResource GroupBox_Base_Style}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <StackPanel x:Name="UserSectionBuilder_CheapToolBar" Orientation="Horizontal">
+                    <Button Command="{Binding Path=LoadSectionModelFromCsvCommand}" ToolTip="Load user section from .csv file." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_OpenFromFile.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=SaveSectionModelAsCsvCommand}" ToolTip="Save user section to .csv file." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_SaveToFile.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=ToggleXAxisDataInputModeCommand}" ToolTip="X axis data input mode. Click to change it." Margin="15,0,0,0">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="80"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Source="ModuleImages/CT_SwitchOff.png"/>
+                                            <Label Content="Positional" Margin="0,2,0,0" Grid.Column="1"/>
+                                        </Grid>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="ToolTip" Value="X axis data input mode. Click to change it."/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=UserSection.AlternativeInputMode, Mode=TwoWay}" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="30"/>
+                                                        <ColumnDefinition Width="80"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image Source="ModuleImages/CT_SwitchOn.png"/>
+                                                    <Label Content="Incremental" Margin="0,2,0,0" Grid.Column="1"/>
+                                                </Grid>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Command="{Binding Path=JustAddSpan}" ToolTip="Add new span at the end of section." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_Add.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=JustRemoveSpan}" ToolTip="Remove last span from section." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/Ct_RemoveLast.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=AddSpanBefore}" ToolTip="Add new span before selected span." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_AddBefore.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=AddSpanAfter}" ToolTip="Add new span after selected span." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_AddAfter.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=ClearSpan}" ToolTip="Clear selected span from previously entered values." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_ClearSpan.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=RemoveSpan}" ToolTip="Remove selected span." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_RemoveSelected.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=ClearAll}" ToolTip="Clear whole section. Restores section to it's default state." Style="{StaticResource ButtonStyle_SectionBuilderButton}">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_ClearAll.png"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=ManuallyCheckUserSectionIntegrity}" ToolTip="Check section integrity (calculation readiness) manually." Style="{StaticResource ButtonStyle_SectionBuilderButton}" Margin="20,0,10,0">
+                        <Button.Content>
+                            <Image Source="ModuleImages/CT_ReportIntegrity.png"/>
+                        </Button.Content>
+                    </Button>
+                    <TextBlock>
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Integrity Status: Undefined"/>
+                                <Setter Property="Margin" Value="0,10,0,0"/>
+                                <Setter Property="ToolTip" Value="Brief integrity report."/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=UserSection.IsRedLightOn, Mode=OneWay}" Value="True">
+                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="Text" Value="Status: Not ready."/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=UserSection.IsYellowLightOn, Mode=OneWay}" Value="True">
+                                        <Setter Property="Foreground" Value="DarkOrange"/>
+                                        <Setter Property="Text" Value="Status: Ready with warnings."/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=UserSection.IsGreenLightOn, Mode=OneWay}" Value="True">
+                                        <Setter Property="Foreground" Value="Green"/>
+                                        <Setter Property="Text" Value="Status: Ready."/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ToggleButton ToolTip="Toggle show section model integrity report" IsChecked="{Binding Path=UserSection.IsIntegrityReportShown, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton">
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Margin" Value="5"/>
+                                <Setter Property="Width" Value="30"/>
+                            </Style>
+                        </ToggleButton.Style>
+                        <ToggleButton.Content>
+                            <Image Source="ModuleImages/CT_Report.png"/>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+                </StackPanel>
+                <DataGrid x:Name="UserSectionBuilder_DataGrid" ItemsSource="{Binding Path=UserSection.Spans}" SelectedItem="{Binding Path=UserSection.SelectedUserSpan, Mode=OneWayToSource}"  Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" SelectionMode="Single" SelectionUnit="FullRow">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=OrdinalIndex, Mode=OneWay}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="#" Width="10" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=OrdinalDescription, Mode=TwoWay, TargetNullValue=''}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Tower&#x0a;Name" Width="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=TowerAbscissa, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_NumericForTowerAbscissa}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Tower&#x0a;Abscissa&#x0a;[m]" Width="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=TowerOrdinate, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Tower&#x0a;Ordinate&#x0a;[m]" Width="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=TowerAPHeight, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Attachment&#x0a;Point Height&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanLength, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_NumericForSpan}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Span Horizontal&#x0a;Length&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="AttachmentSet&#x0a;Selection" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding Path=InsulatorSetsAvailableSelection, Mode=OneWay}" DisplayMemberPath="CodeName" SelectedValue="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Path=InsulatorSetLength, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Attachment Set&#x0a;(Arm) Length&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=InsulatorSetWeight, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Attachment Set&#x0a;(Arm) Weight&#x0a;[kg]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=InsulatorSetOpeningAngle, Mode=TwoWay, StringFormat=F2, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DatagridCellStyle_NumericForOpeningAngle}" Visibility="Hidden">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Attachment Set&#x0a;Opening Angle&#x0a;[deg]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=InsulatorSetIceLoad, Mode=TwoWay, StringFormat=F3, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_Base}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Attachment Set&#x0a;Ice Load&#x0a;[N]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanIceLoad, Mode=TwoWay, StringFormat=F3, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_BaseNumericForSpan}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Conductor&#x0a;Ice Load&#x0a;[N/m]" Width="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanWindLoad, Mode=TwoWay, StringFormat=F3, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" CellStyle="{StaticResource DataGridCellStyle_BaseNumericForSpan}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Conductor&#x0a;Wind Load&#x0a;[N/m]" Width="60" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                    <!-- To do in future
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Click Me"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    -->
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+        <!--Results Area, Place for result presenter datagrid, integrity report and loads estimator-->
+        <!--Result Presenter: (Normally visible)-->
+        <GroupBox Header="Results: " Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource GroupBox_Results_VisibilityStyle}">
+            <DataGrid x:Name="ResultPresentation_DataGrid" ItemsSource="{Binding Path=PresentedResultantSection.PresentedResultantSpans}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=OrdinalDescription, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedBase}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="#" Width="50" Height="50" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Solution, StringFormat=F4, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedBase}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Relative&#x0a;Target Tension&#x0a;[-]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.FinalHorizontalStress, StringFormat=F4, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Final&#x0a;Stress&#x0a;[MPa]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanHorizontalLength, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Conductor Horizontal&#x0a;Length&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanVerticalDifference, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Conductor Vertical&#x0a;Difference&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanCatenaryLength, StringFormat=F4, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Conductor&#x0a;Length&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanVertex, StringFormat=F4, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                <TextBlock Text="Span Vertex&#x0a; Position&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorRelativeSpanVertexPosition, StringFormat=F4, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Span Vertex&#x0a; Relative Position&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.TowerLeftTensileForce, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Total Force&#x0a;Left Tower&#x0a;[N]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.TowerRightTensileForce, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Total Force&#x0a;Right Tower&#x0a;[N]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.LeftInsulatorHorizontalOffset, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Left Insulator Set&#x0a;Horizontal Offset&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.LeftInsulatorVerticalOffset, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Left Insulator Set&#x0a;Vertical Offset&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.RightInsulatorHorizontalOffset, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Right Insulator Set&#x0a;Horizontal Offset&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.RightInsulatorVerticalOffset, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Right Insulator Set&#x0a;Vertical Offset&#x0a;[m]" Width="100" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorMaxSag, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                            <DataGridTextColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Bare Sag in&#x0a;Span Middle Point&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTextColumn.HeaderTemplate>
+                        </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSagInSagVertexPoint_WithInsulatorSetOmitCorrection, StringFormat=F3, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                        <DataGridTextColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Sag in&#x0a;Span Middle Point&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTextColumn.HeaderTemplate>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+                </DataGrid>
+        </GroupBox>
+        <!--Integrity Report Section (Normally hidden)-->
+        <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Style="{StaticResource Grid_VisibilityStyle}" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="25"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Section Model Integrity Report:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Command="{Binding Path=CloseReportCommand}" Grid.Column="1">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                </Button.Style>
+                <Button.Content>
+                    <Image Source="ModuleImages/CT_CloseReport.png"/>
+                </Button.Content>
+            </Button>
+            <ListBox ItemsSource="{Binding Path=UserSection.IntegrityReport}" SelectionMode="Single" Grid.Row="1" Grid.ColumnSpan="2"/>
+        </Grid>
+    </Grid>
+</UserControl>
