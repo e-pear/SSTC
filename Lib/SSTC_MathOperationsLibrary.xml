@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SSTC_MathOperationsLibrary</name>
+    </assembly>
+    <members>
+        <member name="T:SSTC_MathOperationsLibrary.SSTC_MathOperation">
+            <summary>
+            Class that contains methods to calculate sag-tension related parameters.
+            </summary>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.ConductorBareLoadPerUnitLength(System.Double,System.Double)">
+            <summary>
+            Calculates bare conductor weight per unit length - mC1g [N/m]
+            </summary>
+            <param name="conductorWeightPerUnitLength">mC1 [kg/m]</param>
+            <param name="gravitionalAcceleration">g [m/s^2]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.ConductorTotalLoadPerUnitLenght(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates total conductor weight per unit length - mC2g [N/m]
+            </summary>
+            <param name="bareConductorLoad">mC1g [N/m]</param>
+            <param name="conductorRelativeWindLoad">ww [N/m]</param>
+            <param name="conductorRelativeIceLoad">wi [N/m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanVerticalDifference(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates vertical difference in span between neighboring CONDUCTOR attachment points - hc [m]. Negative value indicates that left end of conductor is attached higher than the right one.
+            </summary>
+            <param name="tower1Ordinate">YT1 [m]</param>
+            <param name="Tower2Ordinate">YT2 [m]</param>
+            <param name="insulatorAttachmentPiont1Heigth">hp1 [m]</param>
+            <param name="insulatorAttachmentPoint2Heigth">hp2 [m]</param>
+            <param name="insulator1ArmLength">LINS_Length [m].0 if insulator set is of strain type.</param>
+            <param name="insulator2ArmLength">RINS_Length [m].0 if insulator set is of strain type.</param>
+            <param name="insulator1VerticalOffset">LeINS [m]</param>
+            <param name="insulator2VerticalOffset">ReINS [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanHorizontalLength(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates span length measured between neighboring CONDUCTOR attachment points - ac [m].
+            </summary>
+            <param name="finalHorizontalInsulatorAttachmentPointPosition1">XT1 [m]</param>
+            <param name="finalHorizontalInsulatorAttachmentPointPosition2">XT2 [m]</param>
+            <param name="insulator1HorizontalOffset">LdINS [m]</param>
+            <param name="insulator2HorizontalOffset">RdINS [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanInclinedLength(System.Double,System.Double)">
+            <summary>
+            Calculates inclined span length - L0 [m].
+            </summary>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="spanHorizontalLength">a [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanCatenaryLength(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates span catenary length - L [m].
+            </summary>
+            <param name="horizontalTension">H [N]</param>
+            <param name="conductorLoadPerUnitLength">mCg [N/m]</param>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="spanHorizontalLength">a [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanAbbreviateLength(System.Double,System.Double)">
+            <summary>
+            Calculates abbreviated span length - _L_ [-].
+            </summary>
+            <param name="spanInclinedLength">L0 [m]</param>
+            <param name="spanCatenaryLength">L [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanVertex(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates span vertex - xV [m]. Which is represented by distance measured from vertex do left support point.
+            </summary>
+            <param name="horizontalTension">H [N]</param>
+            <param name="conductorLoadPerUnitLength">mCg [N/m]</param>
+            <param name="catenaryLength">L [m]</param>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="spanHorizontalLength">a[m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanSag(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates sag - f [m]. For x = 0 calculates sag in lowest point of catenary curve (vertex point).
+            </summary>
+            <param name="horizontalTension">H [N]</param>
+            <param name="conductorLoad">mCg [N/m]</param>
+            <param name="spanVertex">xV [m]</param>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="spanHorizontalLength">a [m]</param>
+            <param name="xRelativePosition">x [m]. Sugested range: 0 - 1*. For example 0,5 means sag in middle of span. *Exceeding sugested range may result negative sag values.</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanSagCorrectionFromAttachmentSet(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates sag correction for spans containing strain attachment set or sets - p [m]. 
+            </summary>
+            <param name="spanLenght">a [m]</param>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="leftInsulatorArmLength">LINS_Length [m]</param>
+            <param name="leftInsulatorHorizontalOffset">LdINS [m]</param>
+            <param name="leftInsulatorVerticalOffset">LeINS [m]</param>
+            <param name="rightInsulatorArmLength">RINS_Length [m]</param>
+            <param name="rightInsulatorHorizontalOffset">RdINS [m]</param>
+            <param name="rightInsulatorVerticalOffset">ReINS [m]</param>
+            <param name="spanConductorHorizontalLength">ac [m]</param>
+            <param name="spanConductorRelativePosition">xc [m]. Sugested range: 0 - 1*. For example 0,5 means correction for sag in middle of span. *Exceeding sugested range results in reaching one of range border.</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SpanSagToComplementarySagAdjustment(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates sag adjustment to sag in the middle of complementary span length - yf [m].
+            </summary>
+            <param name="spanVertex">xV [m]</param>
+            <param name="spanVerticalDifference">h [m]</param>
+            <param name="spanHorizontalLength">a [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.SupportResultantForce(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates horizontal resultant force.
+            </summary>
+            <param name="precedingHorizontalTension">Hprv [N]</param>
+            <param name="followingHorizontalTension">Hnxt [N] </param>
+            <param name="insulatorTotalVerticalForce">G [N]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorArmDeadWeight(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates insulator arm dead weigth - JK [N].
+            </summary>
+            <param name="insulatorWeight">mINS [kg]</param>
+            <param name="gravitationalAcceleration">g [m/s^2]</param>
+            <param name="insulatorIceLoad">wINS [N]. 0 if calculated for non ice conditions.</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorTotalVerticalForce(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates total vertical force which is acting on corresponding tower - GK [N].
+            </summary>
+            <param name="insulatorDeadWeight">JK [N]</param>
+            <param name="initialHorizontalTension">H [N]</param>
+            <param name="precedingSpanConductorLoad">mCg0 [N/m]</param>
+            <param name="followingSpanConductorLoad">mCg1 [N/m]</param>
+            <param name="precedingSpanVertex">xV0 [m]</param>
+            <param name="followingSpanVertex">xV1 [m]</param>
+            <param name="precedingSpanHorizontalLength">a0 [m]</param>
+            <param name="precedingSpanFinalTensionModifier">X0 [-]. 1 if GK is calculated for initial state.</param>
+            <param name="followingSpanFinalTensionModifier">X1 [-]. 1 if GK is calculated for initial state.</param>
+            <param name="insulatorInvertedVOpeningAngle">alphaINS [deg]. 0 for long rod insulator's sets.</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorHorizontalOffset(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates insulator horizontal offset - dINS [m].
+            </summary>
+            <param name="precedingHorizontalTension">Hprv [N]</param>
+            <param name="followingHorizontalTension">Hnxt [N]</param>
+            <param name="insulatorArmLength">LK [m]</param>
+            <param name="insulatorTotalVerticalForce">GK [N]</param>
+            <param name="insulatorInvertedVOpeningAngle">alphaINS [deg]. If calculated for inverted-V insulator set (alphaINS != 0), method returns offset for right arm!</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorVerticalOffset(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates insulator vertical offset - eINS [m].
+            </summary>
+            <param name="precedingHorizontalTension">Hprv [N]</param>
+            <param name="followingHorizontalTension">Hnxt [N]</param>
+            <param name="insulatorLength">LK [m]</param>
+            <param name="insulatorTotalVerticalForce">GK [N]</param>
+            <param name="insulatorInvertedVOpeningAngle">alphaINS [deg]. If calculated for inverted-V insulator set (alphaINS != 0), method returns offset for right arm!</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorInvertedVOffsetAngle(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates (generally) final offset angle for inverted-V instulator set - psiINS [deg].
+            </summary>
+            <param name="precedingHorizontalTension">H2prv [N]</param>
+            <param name="followingHorizontalTension">H2nxt [N]</param>
+            <param name="insulatorInvertedVOpeningAngle">alphaINS [deg]</param>
+            <param name="insulatorInvertedVFinalTotalVerticalForce">GK [N]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorInvertedVBridgeHorizontalSpan(System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates inverted-V insulator set's bridge horizontal span length - aINS [m].
+            </summary>
+            <param name="insulatorLength">LK [m]</param>
+            <param name="insulatorInvertedVOpeningAngle">alphaINS [deg]</param>
+            <param name="insulatorInvertedVVerticalDifference">hINS [m]</param>
+            <returns>A double type value.</returns>
+        </member>
+        <member name="M:SSTC_MathOperationsLibrary.SSTC_MathOperation.InsulatorInvertedVBridgeVerticalDifference(System.Double,System.Double)">
+            <summary>
+            Calculates inverted-V insulator set's bridge vertical difference length - hINS [m]. 
+            </summary>
+            <param name="rightArmHorizontalOffset">dINS</param>
+            <param name="rightArmVerticalOffset">eINS</param>
+            <returns>A double type value.</returns>
+        </member>
+    </members>
+</doc>
