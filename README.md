@@ -17,7 +17,13 @@ V. SSTC_Solver_CommonInterfaces - Set of interfaces tiding together MathModel an
 
 VI. SSTC_ViewResources - A bunch of xaml views related resources like converters, regex based validators etc. nothing fancy :).
 
-VII. SSTC_Misc - csv files with conductor/wire and insulator/attachnent sets default databases.
+Additional Folders:
+
+Lib - contains compiled libraries from aforementioned related repositories.
+
+Misc - contains csv files with conductor/wire and insulator/attachnent sets default databases.
+
+Database - contains binary databases which are used by SSTC application.
 
 What is SSTC?
 
