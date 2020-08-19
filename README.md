@@ -55,6 +55,8 @@ The "drawer" module which will allow to present the obtained results in a graphi
 The "printer" module which will allow the results to be printed to an xls/ods file.
 An additional methods of solving nonlinear equations systems.
 
-Credits: Piotr Gruszka 
+Credits: Piotr Gruszka
+
 SSTC Build: 082020 v0.85B
+
 Icons: freeicons.io
