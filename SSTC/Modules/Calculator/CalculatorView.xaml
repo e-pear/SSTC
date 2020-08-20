@@ -582,15 +582,15 @@
                                 </DataTemplate>
                             </DataGridTextColumn.HeaderTemplate>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanHorizontalLength, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
+                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanHorizontalLength, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}" Visibility="Hidden">
                             <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="Conductor Horizontal&#x0a;Length&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTextColumn.HeaderTemplate>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanVerticalDifference, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}">
-                            <DataGridTextColumn.HeaderTemplate>
+                    <DataGridTextColumn Binding="{Binding Path=SpanPresentedResults.ConductorSpanVerticalDifference, StringFormat=F2, Mode=OneWay}" CellStyle="{StaticResource DatagridCellStyle_PresentedExtended}" Visibility="Hidden">
+                        <DataGridTextColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="Conductor Vertical&#x0a;Difference&#x0a;[m]" Width="80" TextWrapping="Wrap" TextAlignment="Center"/>
                                 </DataTemplate>

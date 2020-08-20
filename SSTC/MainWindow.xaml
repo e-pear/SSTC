@@ -102,15 +102,7 @@
                 </Menu>
             </StackPanel>
             <TextBlock Grid.Row="2" Text="S S T C" TextWrapping="Wrap" TextAlignment="Center" Foreground="DarkRed" FontFamily="Arial Black" FontSize="72"/>
-            <TextBlock Grid.Row="4" TextWrapping="Wrap" TextAlignment="Center" Foreground="White"><Run Text="Build: 082020 v0.85B"/><InlineUIContainer>
-                    <ListView Height="100" Width="100">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </InlineUIContainer></TextBlock>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" TextAlignment="Center" Foreground="White"><Run Text="Build: 082020 v0.85B"/></TextBlock>
         </Grid>
         <TabControl x:Name="TabController" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" Grid.Column="1">
             <TabControl.Resources>
