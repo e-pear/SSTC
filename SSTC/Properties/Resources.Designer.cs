@@ -61,16 +61,26 @@ namespace SSTC.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The program&apos;s main purpose is to calculate wire sags and tensions in overhead powerline section.\n
-        ///Mathematically, the goal is achieved by solving 5th degree n - nonlinear equation system.\n
-        ///\n
-        ///Main features:\n
-        ///1. Support for solving nonlinear equations systems by using the Newton-Raphson method with the possibility of selecting the Jacobi matrix factor algorithm.\n
-        ///2. User is able to define any overhead powerline section that includes: spacing, position in terrain and height of supporting structures,  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to The program&apos;s main purpose is to calculate wire sags and tensions in overhead powerline section.
+        ///Mathematically, the goal is achieved by solving 5th degree n - nonlinear equation system.
+        ///
+        ///Main features:
+        ///1. Support for solving nonlinear equations systems by using the Newton-Raphson method with the possibility of selecting the Jacobi matrix factor algorithm.
+        ///2. User is able to define any overhead powerline section that includes: spacing, position in terrain and height of supporting structures, weight and [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string About {
             get {
                 return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] conductors {
+            get {
+                object obj = ResourceManager.GetObject("conductors", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -85,6 +95,16 @@ namespace SSTC.Properties {
         internal static string MessageCodes {
             get {
                 return ResourceManager.GetString("MessageCodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] sets {
+            get {
+                object obj = ResourceManager.GetObject("sets", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }
