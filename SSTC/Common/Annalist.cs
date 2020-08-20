@@ -31,7 +31,7 @@ namespace SSTC.Common
         // CONSTRUCTOR
         private Annalist()
         {
-            _logPath = Directory.GetCurrentDirectory() + "\\Log\\session_log.txt";
+            _logPath = Directory.GetCurrentDirectory() + "\\session_log.txt";
 
             _timer = new Timer();
             _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -313,5 +313,6 @@ namespace SSTC.Common
                     return MessageBoxResult.None;
             }
         }
+
     }
 }
